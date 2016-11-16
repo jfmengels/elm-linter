@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Lint
+import FindNoAnnotatedFunction exposing (rule)
 import Ast
 import Ast.Expression exposing (..)
 import Ast.Statement exposing (..)
@@ -100,7 +101,7 @@ lint m =
                     []
 
         errors =
-            Lint.lint statements Lint.findNoAnnotatedFunction
+            Lint.lint statements rule
     in
         div [] (List.map (\x -> p [] [ text x ]) errors)
 
