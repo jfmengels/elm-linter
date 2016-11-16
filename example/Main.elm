@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Lint
 import Ast
 import Ast.Expression exposing (..)
 import Ast.Statement exposing (..)
@@ -84,11 +85,32 @@ tree m =
             div [] [ text <| toString err ]
 
 
+lint : String -> Html Msg
+lint m =
+    let
+        ast =
+            Ast.parse m
+
+        statements =
+            case ast of
+                ( Ok statements, _ ) ->
+                    statements
+
+                _ ->
+                    []
+
+        errors =
+            Lint.lint statements Lint.findNoAnnotatedFunction
+    in
+        div [] (List.map (\x -> p [] [ text x ]) errors)
+
+
 view : String -> Html Msg
 view model =
     div []
         [ textarea [ on "input" (JD.map Replace targetValue) ] [ text model ]
-        , tree model
+        , p [] [ tree model ]
+        , p [] [ lint model ]
         ]
 
 
