@@ -2,5 +2,5 @@ language: node_js
 node_js:
   - "0.12"
 before_script:
-  - npm install -g elm elm-test
+  - npm install -g elm@0.17 elm-test
 script: elm-test

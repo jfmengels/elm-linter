@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "A parser for Elm code",
-    "repository": "https://github.com/Bogdanp/elm-ast.git",
+    "summary": "A linter for Elm code",
+    "repository": "https://github.com/jfmengels/elm-linter.git",
     "license": "BSD3",
     "source-directories": [
         "src",
