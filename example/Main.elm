@@ -1,7 +1,11 @@
 module Main exposing (main)
 
 import Lint
-import FindNoAnnotatedFunction exposing (rule)
+import FindNoAnnotatedFunction
+
+
+-- import NoDebugLog
+
 import Ast
 import Ast.Expression exposing (..)
 import Ast.Statement exposing (..)
@@ -22,8 +26,8 @@ init =
 f : Int -> Int
 f x = x + 1
 
-g : Int -> Int
-g x = x * 2
+a : a -> a
+a = Debug.log "foo" x
 
 h = f << g
 """
@@ -101,7 +105,10 @@ lint m =
                     []
 
         errors =
-            Lint.lint statements rule
+            List.concat
+                [ Lint.lint statements FindNoAnnotatedFunction.rule
+                  -- , Lint.lint statements NoDebugLog.rule
+                ]
     in
         div [] (List.map (\x -> p [] [ text x ]) errors)
 
