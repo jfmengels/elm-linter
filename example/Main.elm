@@ -2,10 +2,7 @@ module Main exposing (main)
 
 import Lint
 import FindNoAnnotatedFunction
-
-
--- import NoDebugLog
-
+import NoDebugLog
 import Ast
 import Ast.Expression exposing (..)
 import Ast.Statement exposing (..)
@@ -107,7 +104,7 @@ lint m =
         errors =
             List.concat
                 [ Lint.lint statements FindNoAnnotatedFunction.rule
-                  -- , Lint.lint statements NoDebugLog.rule
+                , Lint.lint statements NoDebugLog.rule
                 ]
     in
         div [] (List.map (\x -> p [] [ text x ]) errors)

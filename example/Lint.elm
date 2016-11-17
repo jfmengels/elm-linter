@@ -34,6 +34,27 @@ type alias LintRule context =
     }
 
 
+visitExpression : LintRule context -> context -> Expression -> ( Errors, context )
+visitExpression rule context node =
+    let
+        ( errorsParent, ctxParent ) =
+            rule.expressionFn context node
+
+        ( errorsChildren, ctxChildren ) =
+            case node of
+                Application expression1 expression2 ->
+                    -- TODO expression2
+                    visitExpression rule ctxParent expression1
+
+                Access expression names ->
+                    visitExpression rule ctxParent expression
+
+                _ ->
+                    ( [], context )
+    in
+        ( List.concat [ errorsParent, errorsChildren ], ctxChildren )
+
+
 visitStatement : LintRule context -> context -> Statement -> ( Errors, context )
 visitStatement rule context node =
     let
@@ -46,7 +67,7 @@ visitStatement rule context node =
                     rule.typeFn ctxParent application
 
                 FunctionDeclaration name params body ->
-                    rule.expressionFn ctxParent body
+                    visitExpression rule ctxParent body
 
                 _ ->
                     ( [], context )
