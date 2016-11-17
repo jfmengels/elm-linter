@@ -77,9 +77,9 @@ statement s =
             li [] [ pre [] [ text <| toString s ] ]
 
 
-tree : String -> Html Msg
-tree m =
-    case Ast.parse m of
+tree : ( Result (List String) (List Statement), a ) -> Html Msg
+tree ast =
+    case ast of
         ( Ok statements, _ ) ->
             ul [] (List.map statement statements)
 
@@ -87,12 +87,9 @@ tree m =
             div [] [ text <| toString err ]
 
 
-lint : String -> Html Msg
-lint m =
+lint : ( Result (List String) (List Statement), a ) -> Html Msg
+lint ast =
     let
-        ast =
-            Ast.parse m
-
         statements =
             case ast of
                 ( Ok statements, _ ) ->
@@ -112,11 +109,15 @@ lint m =
 
 view : String -> Html Msg
 view model =
-    div []
-        [ textarea [ on "input" (JD.map Replace targetValue) ] [ text model ]
-        , p [] [ tree model ]
-        , p [] [ lint model ]
-        ]
+    let
+        ast =
+            Ast.parse model
+    in
+        div []
+            [ textarea [ on "input" (JD.map Replace targetValue) ] [ text model ]
+            , p [] [ tree ast ]
+            , p [] [ lint ast ]
+            ]
 
 
 main : Program Never
